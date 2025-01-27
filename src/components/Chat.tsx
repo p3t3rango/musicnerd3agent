@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { ChatMessage as ChatMessageType } from '../lib/types';
 import ChatMessage from './ChatMessage';
@@ -48,7 +50,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-[80vh] border rounded-lg shadow-sm">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => (
           <ChatMessage key={index} message={message} />
