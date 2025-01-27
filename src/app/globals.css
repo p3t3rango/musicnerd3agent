@@ -3,52 +3,52 @@
 @tailwind utilities;
 
 :root {
-  --primary-pink: #FF69B4;  /* Hot pink - we can adjust this shade */
-  --secondary-pink: #FFB6C1;  /* Lighter pink for hover states */
-  --background-dark: #000000;
+  --background-pink: #FFE5F0;  /* Light pink background */
+  --primary-black: #000000;
+  --text-black: #1A1A1A;
   --text-white: #FFFFFF;
-  --text-light: #F5F5F5;
+  --accent-pink: #FF69B4;  /* Brighter pink for accents */
 }
 
 body {
-  background-color: var(--background-dark);
-  color: var(--text-white);
+  background-color: var(--background-pink);
+  color: var(--text-black);
 }
 
 /* Base button styling */
 button {
-  background-color: var(--primary-pink);
+  background-color: var(--primary-black);
   color: var(--text-white);
   border: none;
   transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: var(--secondary-pink);
+  background-color: var(--accent-pink);
 }
 
 /* Input styling */
 input, textarea {
   background-color: var(--text-white);
-  color: var(--background-dark);
-  border: 2px solid var(--primary-pink);
+  color: var(--text-black);
+  border: 2px solid var(--primary-black);
 }
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: var(--secondary-pink);
-  box-shadow: 0 0 5px var(--primary-pink);
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 5px var(--accent-pink);
 }
 
 /* Link styling */
 a {
-  color: var(--primary-pink);
+  color: var(--primary-black);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: var(--secondary-pink);
+  color: var(--accent-pink);
 }
 
 /* Custom scrollbar */
@@ -57,14 +57,14 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background-dark);
+  background: var(--background-pink);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-pink);
+  background: var(--primary-black);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-pink);
+  background: var(--accent-pink);
 } 
