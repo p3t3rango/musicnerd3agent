@@ -1,22 +1,27 @@
 import axios, { AxiosError } from 'axios';
 import { MusicNerdResponse, Artist } from './types';
 
-const BASE_URL = 'https://ng-staging.musicnerd.xyz';
+const BASE_URL = 'https://www.musicnerd.xyz';
 
 export const musicNerdApi = {
   async searchArtist(name: string): Promise<Artist | null> {
     try {
       console.log('Searching for artist:', name);
-      // First try to search for the artist
-      const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/api/search`, {
-        query: name
+      const response = await axios.get<MusicNerdResponse>(`${BASE_URL}/api/artists/search`, {
+        params: { q: name }
       });
-      console.log('Search Response:', response.data);
+      
+      console.log('Search Response (raw):', response.data);
 
-      if (response.data.result && response.data.result.length > 0) {
-        // If we found a match, get their full details
-        const artistId = response.data.result[0].id;
-        return this.findArtistByUUID(artistId);
+      if (response.data.result) {
+        return {
+          id: response.data.result.id,
+          name: response.data.result.name,
+          bio: response.data.result.bio,
+          genres: response.data.result.genres,
+          releases: response.data.result.releases,
+          musicbrainzId: response.data.result.musicbrainzId,
+        };
       }
       return null;
     } catch (error) {
@@ -86,9 +91,20 @@ export const musicNerdApi = {
   async findArtistByUUID(uuid: string): Promise<Artist | null> {
     try {
       console.log('Fetching artist by UUID:', uuid);
-      const response = await axios.get<MusicNerdResponse>(`${BASE_URL}/artist/${uuid}`);
-      console.log('API Response:', response.data);
-      return response.data.result;
+      const response = await axios.get<MusicNerdResponse>(`${BASE_URL}/api/artists/${uuid}`);
+      console.log('Artist Details Response:', response.data);
+      
+      if (response.data.result) {
+        return {
+          id: response.data.result.id,
+          name: response.data.result.name,
+          bio: response.data.result.bio,
+          genres: response.data.result.genres,
+          releases: response.data.result.releases,
+          musicbrainzId: response.data.result.musicbrainzId,
+        };
+      }
+      return null;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error('Error finding artist by UUID:', error.response?.data || error.message);
