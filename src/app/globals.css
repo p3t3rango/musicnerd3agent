@@ -3,16 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --background-pink: #FFE5F0;  /* Light pink background */
+  --hot-pink: #FF69B4;  /* Hot pink for chat box */
   --primary-black: #000000;
   --text-black: #1A1A1A;
   --text-white: #FFFFFF;
-  --accent-pink: #FF69B4;  /* Brighter pink for accents */
 }
 
 body {
-  background-color: var(--background-pink);
+  background-color: var(--text-white);  /* White background */
   color: var(--text-black);
+}
+
+/* Chat box specific styling */
+.chat-container {
+  background-color: var(--hot-pink);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem;
 }
 
 /* Base button styling */
@@ -24,7 +31,7 @@ button {
 }
 
 button:hover {
-  background-color: var(--accent-pink);
+  background-color: var(--hot-pink);
 }
 
 /* Input styling */
@@ -36,8 +43,8 @@ input, textarea {
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: var(--accent-pink);
-  box-shadow: 0 0 5px var(--accent-pink);
+  border-color: var(--hot-pink);
+  box-shadow: 0 0 5px var(--hot-pink);
 }
 
 /* Link styling */
@@ -48,7 +55,7 @@ a {
 }
 
 a:hover {
-  color: var(--accent-pink);
+  color: var(--hot-pink);
 }
 
 /* Custom scrollbar */
@@ -57,7 +64,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background-pink);
+  background: var(--text-white);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -66,5 +73,5 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-pink);
+  background: var(--hot-pink);
 } 

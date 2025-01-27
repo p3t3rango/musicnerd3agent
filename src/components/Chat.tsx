@@ -104,7 +104,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-[80vh] border rounded-lg shadow-sm">
+    <div className="chat-container flex flex-col h-[80vh] border rounded-lg shadow-sm">
       {error && (
         <div className="p-4 bg-red-50 text-red-600 border-b">
           Error: {error}
