@@ -26,28 +26,35 @@ export default function Chat() {
       let artistContext = '';
       let verifiedInfo = null;
 
-      // Check for Spotify ID
-      if (content.includes('spotify:artist:')) {
+      // First, try to extract artist name from the query
+      const artistNameMatch = content.match(/(?:about|who is|tell me about|info on)\s+([^?.,!]+)/i);
+      if (artistNameMatch) {
+        const artistName = artistNameMatch[1].trim();
+        console.log('Searching for artist:', artistName);
+        verifiedInfo = await musicNerdApi.searchArtist(artistName);
+        console.log('Artist search result:', verifiedInfo);
+      }
+
+      // If no artist found by name, check for MusicNerd URL
+      if (!verifiedInfo && content.includes('musicnerd.xyz/artist/')) {
+        const musicNerdMatch = content.match(/musicnerd\.xyz\/artist\/([a-f0-9-]+)/i);
+        if (musicNerdMatch) {
+          console.log('Found MusicNerd UUID in content');
+          const uuid = musicNerdMatch[1];
+          console.log('Attempting to fetch artist with UUID:', uuid);
+          verifiedInfo = await musicNerdApi.findArtistByUUID(uuid);
+          console.log('UUID lookup result:', verifiedInfo);
+        }
+      }
+
+      // Check for Spotify ID as fallback
+      if (!verifiedInfo && content.includes('spotify:artist:')) {
         console.log('Found Spotify ID in content');
         const spotifyId = content.match(/spotify:artist:([a-zA-Z0-9]+)/)?.[1];
         if (spotifyId) {
           console.log('Attempting to fetch artist with Spotify ID:', spotifyId);
           verifiedInfo = await musicNerdApi.findArtistBySpotifyID(spotifyId);
           console.log('Spotify ID lookup result:', verifiedInfo);
-        }
-      }
-
-      // If no Spotify ID, try to extract artist name
-      if (!verifiedInfo) {
-        const artistMatch = content.match(/(?:about|who is|tell me about|info on)\s+([^?.,!]+)/i);
-        if (artistMatch) {
-          const artistName = artistMatch[1].trim();
-          console.log('Attempting to fetch artist by name:', artistName);
-          const twitterHandle = await musicNerdApi.findArtistByName(artistName);
-          console.log('Artist name lookup result:', twitterHandle);
-          if (twitterHandle) {
-            verifiedInfo = { name: artistName, twitterHandle };
-          }
         }
       }
 
