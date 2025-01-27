@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { MusicNerdResponse, Artist } from './types';
 
 const BASE_URL = 'https://ng-staging.musicnerd.xyz';
@@ -13,7 +13,11 @@ export const musicNerdApi = {
       console.log('API Response:', response.data);
       return response.data.result;
     } catch (error) {
-      console.error('Error finding artist by Spotify ID:', error.response?.data || error.message);
+      if (error instanceof AxiosError) {
+        console.error('Error finding artist by Spotify ID:', error.response?.data || error.message);
+      } else {
+        console.error('Error finding artist by Spotify ID:', error);
+      }
       return null;
     }
   },
@@ -27,7 +31,11 @@ export const musicNerdApi = {
       console.log('API Response:', response.data);
       return response.data.result;
     } catch (error) {
-      console.error('Error finding artist by name:', error.response?.data || error.message);
+      if (error instanceof AxiosError) {
+        console.error('Error finding artist by name:', error.response?.data || error.message);
+      } else {
+        console.error('Error finding artist by name:', error);
+      }
       return null;
     }
   },
@@ -41,7 +49,11 @@ export const musicNerdApi = {
       console.log('API Response:', response.data);
       return response.data.result;
     } catch (error) {
-      console.error('Error finding artist by ETH address:', error.response?.data || error.message);
+      if (error instanceof AxiosError) {
+        console.error('Error finding artist by ETH address:', error.response?.data || error.message);
+      } else {
+        console.error('Error finding artist by ETH address:', error);
+      }
       return null;
     }
   }
