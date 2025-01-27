@@ -7,6 +7,10 @@
     "strict": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   }
 } 

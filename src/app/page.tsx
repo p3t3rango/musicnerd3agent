@@ -1,6 +1,6 @@
 'use client';
 
-import Chat from '@/components/Chat';
+import Chat from '../components/Chat';
 import { testArtistSearch } from '../lib/api';
 
 export default function Home() {
