@@ -64,10 +64,22 @@ export default function Chat() {
         artistContext = JSON.stringify({
           source: 'MusicNerd API',
           verifiedData: true,
-          info: verifiedInfo
+          artist: {
+            name: verifiedInfo.name || 'Unknown',
+            biography: verifiedInfo.bio || 'No biography available',
+            genres: verifiedInfo.genres || [],
+            discography: verifiedInfo.releases?.map(release => ({
+              title: release.title,
+              year: release.year,
+              type: release.type
+            })) || []
+          },
+          confidence: 'high',
+          source_url: `https://www.musicnerd.xyz/artist/${verifiedInfo.id}`
         });
       } else {
         console.log('No verified info found');
+        artistContext = ''; // Clear context if no verified info found
       }
 
       // Generate Zane's response

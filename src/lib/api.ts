@@ -114,4 +114,20 @@ export const musicNerdApi = {
       return null;
     }
   }
-}; 
+};
+
+export async function testArtistSearch() {
+  const api = musicNerdApi;
+  console.log('Testing search for Mark de Clive-Lowe...');
+  
+  try {
+    const result = await api.searchArtist('Mark de Clive-Lowe');
+    console.log('Search Result:', {
+      success: !!result,
+      data: result,
+      raw: JSON.stringify(result, null, 2)
+    });
+  } catch (error) {
+    console.error('Search failed:', error);
+  }
+} 

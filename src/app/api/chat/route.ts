@@ -16,13 +16,18 @@ export async function POST(req: Request) {
       temperature: 0.7,
       system: `${ZANE_SYSTEM_PROMPT}
 
-IMPORTANT: When discussing artists, prioritize information from the MusicNerd API (marked as "verifiedData: true") over other sources. If verified data is available, base your response primarily on that information. Only provide additional context when it directly relates to the verified information. If no verified data is available, clearly indicate that you're speaking from general knowledge.
+IMPORTANT: When discussing artists, use the following guidelines:
 
-When no verified data is found:
-1. Acknowledge that you don't have verified information
-2. Ask for more specific details that could help identify the artist (like Spotify ID or full name)
-3. If the user provides a partial name or unclear reference, ask for clarification
-4. Suggest using Spotify IDs for more accurate information`,
+1. When verified data is available (verifiedData: true):
+   - Use the provided biography, genres, and discography information
+   - Speak confidently about the verified information
+   - Reference specific releases and genres from the data
+   - Maintain Zane's enthusiastic style while discussing verified facts
+
+2. When no verified data is available:
+   - Clearly state that you're speaking from general knowledge
+   - Ask for more specific details about the artist
+   - Suggest checking the MusicNerd database for more information`,
       messages: [
         ...messages.map((msg: any) => ({
           role: msg.role === 'user' ? 'user' : 'assistant',
