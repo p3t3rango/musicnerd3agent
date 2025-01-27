@@ -21,14 +21,38 @@ export default function Chat() {
       const userMessage: ChatMessageType = { role: 'user', content };
       setMessages(prev => [...prev, userMessage]);
 
-      // Try to extract artist information if possible
+      // Try to extract artist information from various sources
       let artistContext = '';
+      let verifiedInfo = null;
+
+      // Check for Spotify ID
       if (content.includes('spotify:artist:')) {
         const spotifyId = content.match(/spotify:artist:([a-zA-Z0-9]+)/)?.[1];
         if (spotifyId) {
-          const artist = await musicNerdApi.findArtistBySpotifyID(spotifyId);
-          artistContext = JSON.stringify(artist);
+          verifiedInfo = await musicNerdApi.findArtistBySpotifyID(spotifyId);
         }
+      }
+
+      // If no Spotify ID, try to extract artist name
+      if (!verifiedInfo) {
+        // Simple regex to find potential artist names in quotes
+        const artistMatch = content.match(/"([^"]+)"|'([^']+)'/);
+        if (artistMatch) {
+          const artistName = artistMatch[1] || artistMatch[2];
+          const twitterHandle = await musicNerdApi.findArtistByName(artistName);
+          if (twitterHandle) {
+            verifiedInfo = { name: artistName, twitterHandle };
+          }
+        }
+      }
+
+      // If we found verified info, add it to the context
+      if (verifiedInfo) {
+        artistContext = JSON.stringify({
+          source: 'MusicNerd API',
+          verifiedData: true,
+          info: verifiedInfo
+        });
       }
 
       // Generate Zane's response

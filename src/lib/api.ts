@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { MusicNerdResponse } from './types';
+import { MusicNerdResponse, Artist } from './types';
 
 const BASE_URL = 'https://api.musicnerd.xyz/api';
 
 export const musicNerdApi = {
-  async findArtistBySpotifyID(spotifyId: string) {
+  async findArtistBySpotifyID(spotifyId: string): Promise<Artist | null> {
     try {
       const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/findArtistBySpotifyID`, {
         spotifyID: spotifyId
@@ -12,17 +12,31 @@ export const musicNerdApi = {
       return response.data.result;
     } catch (error) {
       console.error('Error finding artist:', error);
-      throw error;
+      return null;
     }
   },
 
-  async findTwitterHandle(query: { name?: string; ethAddress?: string }) {
+  async findArtistByName(name: string): Promise<string | null> {
     try {
-      const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/findTwitterHandle`, query);
+      const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/findTwitterHandle`, {
+        name: name
+      });
       return response.data.result;
     } catch (error) {
       console.error('Error finding Twitter handle:', error);
-      throw error;
+      return null;
+    }
+  },
+
+  async findArtistByEthAddress(ethAddress: string): Promise<string | null> {
+    try {
+      const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/findTwitterHandle`, {
+        ethAddress: ethAddress
+      });
+      return response.data.result;
+    } catch (error) {
+      console.error('Error finding Twitter handle:', error);
+      return null;
     }
   }
 }; 

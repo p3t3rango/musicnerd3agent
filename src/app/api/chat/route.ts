@@ -14,7 +14,9 @@ export async function POST(req: Request) {
       model: 'claude-3-sonnet-20240229',
       max_tokens: 1000,
       temperature: 0.7,
-      system: ZANE_SYSTEM_PROMPT,
+      system: `${ZANE_SYSTEM_PROMPT}
+
+IMPORTANT: When discussing artists, prioritize information from the MusicNerd API (marked as "verifiedData: true") over other sources. If verified data is available, base your response primarily on that information. Only provide additional context when it directly relates to the verified information. If no verified data is available, clearly indicate that you're speaking from general knowledge.`,
       messages: [
         ...messages.map((msg: any) => ({
           role: msg.role === 'user' ? 'user' : 'assistant',
@@ -22,7 +24,7 @@ export async function POST(req: Request) {
         })),
         artistContext ? {
           role: 'assistant',
-          content: `Additional context about the artist: ${artistContext}`
+          content: `Verified artist information from MusicNerd: ${artistContext}`
         } : null
       ].filter(Boolean)
     });
