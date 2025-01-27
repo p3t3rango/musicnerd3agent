@@ -17,6 +17,7 @@ export default function Chat() {
     setError(null);
     
     try {
+      console.log('Processing user input:', content);
       // Add user message
       const userMessage: ChatMessageType = { role: 'user', content };
       setMessages(prev => [...prev, userMessage]);
@@ -27,19 +28,23 @@ export default function Chat() {
 
       // Check for Spotify ID
       if (content.includes('spotify:artist:')) {
+        console.log('Found Spotify ID in content');
         const spotifyId = content.match(/spotify:artist:([a-zA-Z0-9]+)/)?.[1];
         if (spotifyId) {
+          console.log('Attempting to fetch artist with Spotify ID:', spotifyId);
           verifiedInfo = await musicNerdApi.findArtistBySpotifyID(spotifyId);
+          console.log('Spotify ID lookup result:', verifiedInfo);
         }
       }
 
       // If no Spotify ID, try to extract artist name
       if (!verifiedInfo) {
-        // Simple regex to find potential artist names in quotes
-        const artistMatch = content.match(/"([^"]+)"|'([^']+)'/);
+        const artistMatch = content.match(/(?:about|who is|tell me about|info on)\s+([^?.,!]+)/i);
         if (artistMatch) {
-          const artistName = artistMatch[1] || artistMatch[2];
+          const artistName = artistMatch[1].trim();
+          console.log('Attempting to fetch artist by name:', artistName);
           const twitterHandle = await musicNerdApi.findArtistByName(artistName);
+          console.log('Artist name lookup result:', twitterHandle);
           if (twitterHandle) {
             verifiedInfo = { name: artistName, twitterHandle };
           }
@@ -48,11 +53,14 @@ export default function Chat() {
 
       // If we found verified info, add it to the context
       if (verifiedInfo) {
+        console.log('Found verified info:', verifiedInfo);
         artistContext = JSON.stringify({
           source: 'MusicNerd API',
           verifiedData: true,
           info: verifiedInfo
         });
+      } else {
+        console.log('No verified info found');
       }
 
       // Generate Zane's response
