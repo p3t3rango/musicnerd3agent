@@ -6,6 +6,7 @@ import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { generateZaneResponse } from '../lib/claude';
 import { musicNerdApi } from '../lib/api';
+import { searchSpotifyArtist } from '../lib/spotify';
 
 export default function Chat() {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
@@ -22,18 +23,23 @@ export default function Chat() {
       const userMessage: ChatMessageType = { role: 'user', content };
       setMessages(prev => [...prev, userMessage]);
 
-      // Try to extract artist information from various sources
-      let artistContext = '';
-      let verifiedInfo = null;
-
-      // First, try to extract artist name from the query
+      // First, try to search Spotify for the artist
       const artistNameMatch = content.match(/(?:about|who is|tell me about|info on)\s+([^?.,!]+)/i);
       if (artistNameMatch) {
         const artistName = artistNameMatch[1].trim();
-        console.log('Searching for artist:', artistName);
-        verifiedInfo = await musicNerdApi.searchArtist(artistName);
-        console.log('Artist search result:', verifiedInfo);
+        console.log('Searching Spotify for artist:', artistName);
+        const spotifyId = await searchSpotifyArtist(artistName);
+        
+        if (spotifyId) {
+          console.log('Found Spotify ID:', spotifyId);
+          const verifiedInfo = await musicNerdApi.findArtistBySpotifyID(spotifyId);
+          console.log('MusicNerd lookup result:', verifiedInfo);
+        }
       }
+
+      // If no Spotify match, continue with other search methods
+      let artistContext = '';
+      let verifiedInfo = null;
 
       // If no artist found by name, check for MusicNerd URL
       if (!verifiedInfo && content.includes('musicnerd.xyz/artist/')) {
