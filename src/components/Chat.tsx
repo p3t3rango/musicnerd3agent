@@ -82,7 +82,11 @@ export default function Chat() {
             name: verifiedInfo.name || 'Unknown',
             biography: verifiedInfo.bio || 'No biography available',
             genres: verifiedInfo.genres || [],
-            discography: verifiedInfo.releases?.map(release => ({
+            discography: verifiedInfo.releases?.map((release: {
+              title: string;
+              year: number;
+              type: string;
+            }) => ({
               title: release.title,
               year: release.year,
               type: release.type
