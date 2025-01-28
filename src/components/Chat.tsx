@@ -15,7 +15,7 @@ export default function Chat() {
   const handleSend = async (content: string) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       console.log('Processing user input:', content);
       // Add user message
@@ -30,8 +30,20 @@ export default function Chat() {
       const artistNameMatch = content.match(/(?:about|who is|tell me about|info on)\s+([^?.,!]+)/i);
       if (artistNameMatch) {
         const artistName = artistNameMatch[1].trim();
-        console.log('Searching for artist:', artistName);
-        verifiedInfo = await musicNerdApi.searchArtist(artistName);
+
+        // Search for artist on Spotify
+        const spotifySearch = await fetch('/api/spotify/search', {
+          method: 'POST',
+          body: JSON.stringify({ query: artistName })
+        }).then(res => res.json());
+        console.log('Spotify Search Results:', spotifySearch.artist.id);
+
+        // Use Spotify ID to search for artist on MusicNerd
+        verifiedInfo = await fetch('/api/musicnerd/search', {
+          method: 'POST',
+          body: JSON.stringify({ spotify_id: spotifySearch.artist.id })
+        }).then(res => res.json());
+
         console.log('Artist search result:', verifiedInfo);
       }
 
@@ -65,6 +77,8 @@ export default function Chat() {
           source: 'MusicNerd API',
           verifiedData: true,
           artist: {
+            twitter: verifiedInfo.x || 'Unknown',
+            bandcamp: verifiedInfo.bandcamp || 'Unknown',
             name: verifiedInfo.name || 'Unknown',
             biography: verifiedInfo.bio || 'No biography available',
             genres: verifiedInfo.genres || [],
@@ -81,7 +95,7 @@ export default function Chat() {
         console.log('No verified info found');
         artistContext = ''; // Clear context if no verified info found
       }
-
+console.log('Artist Context:', artistContext);
       // Generate Zane's response
       const response = await generateZaneResponse(
         messages.concat(userMessage),

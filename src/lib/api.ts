@@ -37,7 +37,7 @@ export const musicNerdApi = {
   async findArtistBySpotifyID(spotifyId: string): Promise<Artist | null> {
     try {
       console.log('Fetching artist by Spotify ID:', spotifyId);
-      const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/findArtistBySpotifyID`, {
+      const response = await axios.post<MusicNerdResponse>(`${BASE_URL}/api/findArtistBySpotifyID`, {
         spotifyID: spotifyId
       });
       console.log('API Response:', response.data);
